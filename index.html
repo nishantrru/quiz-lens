@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071425" />
+    <meta
+      name="description"
+      content="QuizLens AI is a privacy-first workspace for authorized quiz question review and auditing."
+    />
+    <title>QuizLens AI — Question audit workspace</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand" aria-label="QuizLens AI">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>QuizLens <b>AI</b></span>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-view-target="dashboard" type="button">
+            <span class="nav-icon">⌂</span><span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view-target="capture" type="button">
+            <span class="nav-icon">◉</span><span>New audit</span>
+          </button>
+          <button class="nav-item" data-view-target="capture" type="button">
+            <span class="nav-icon">▣</span><span>Live capture</span>
+            <span class="nav-pill" id="liveNavState">Idle</span>
+          </button>
+          <button class="nav-item" data-view-target="history" type="button">
+            <span class="nav-icon">☷</span><span>Question history</span>
+          </button>
+          <button class="nav-item" data-view-target="flagged" type="button">
+            <span class="nav-icon">⚑</span><span>Flagged questions</span>
+          </button>
+          <button class="nav-item" data-view-target="reports" type="button">
+            <span class="nav-icon">▤</span><span>Reports</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <button class="nav-item" data-view-target="settings" type="button">
+            <span class="nav-icon">⚙</span><span>Settings</span>
+          </button>
+          <div class="workspace-profile">
+            <span class="avatar">QL</span>
+            <span><b>Personal workspace</b><small>Browser-private mode</small></span>
+            <span class="status-dot local" title="Local workspace"></span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenuButton" type="button" aria-label="Open navigation">☰</button>
+          <div class="crumb"><span id="pageEyebrow">Workspace</span><strong id="pageTitle">Dashboard</strong></div>
+          <div class="topbar-actions">
+            <span class="privacy-chip"><span class="lock">⌁</span> Local-first</span>
+            <button class="icon-button" id="openHelp" type="button" aria-label="Open getting-started guide">?</button>
+          </div>
+        </header>
+
+        <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+        <section class="view active" id="view-dashboard" data-view="dashboard">
+          <div class="page-heading dashboard-heading">
+            <div>
+              <p class="eyebrow">AUTHORIZED REVIEW WORKSPACE</p>
+              <h1>Audit questions with clarity, not guesswork.</h1>
+              <p class="lede">Capture practice questions you are allowed to review, preserve their context, and keep AI suggestions clearly separate from independently verified answers.</p>
+            </div>
+            <button class="button primary large" id="newAuditButton" type="button"><span>＋</span> Start an audit</button>
+          </div>
+
+          <div class="stat-grid" aria-label="Audit workspace statistics">
+            <article class="stat-card"><span class="stat-icon cyan">◌</span><div><small>Audit sessions</small><strong id="statSessions">0</strong><em id="statSessionText">Create your first session</em></div></article>
+            <article class="stat-card"><span class="stat-icon blue">▣</span><div><small>Captured questions</small><strong id="statCaptured">0</strong><em id="statCapturedText">Waiting for capture</em></div></article>
+            <article class="stat-card"><span class="stat-icon violet">✦</span><div><small>AI analyzed</small><strong id="statAnalyzed">0</strong><em id="statAnalyzedText">Secure service not connected</em></div></article>
+            <article class="stat-card"><span class="stat-icon amber">✓</span><div><small>Verified answers</small><strong id="statVerified">0</strong><em id="statVerifiedText">Independent verification only</em></div></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel recent-panel">
+              <div class="panel-heading">
+                <div><p class="eyebrow">CONTINUE WORKING</p><h2>Recent audit sessions</h2></div>
+                <button class="text-button" data-view-target="history" type="button">View all sessions</button>
+              </div>
+              <div id="recentSessions" class="empty-state compact">
+                <span class="empty-icon">◌</span>
+                <h3>No audit sessions yet</h3>
+                <p>Start a private session, then explicitly choose a capture source.</p>
+                <button class="button secondary" id="recentStartButton" type="button">Create your first audit</button>
+              </div>
+            </article>
+
+            <aside class="panel integrity-panel">
+              <div class="integrity-icon">⌁</div>
+              <p class="eyebrow">AUDIT INTEGRITY</p>
+              <h2>Keep conclusions evidence-based.</h2>
+              <ul class="check-list">
+                <li><span>✓</span> Capture only sources you are authorized to view.</li>
+                <li><span>✓</span> AI output is always marked as a suggestion.</li>
+                <li><span>✓</span> Google search never verifies an answer automatically.</li>
+              </ul>
+              <button class="text-button" id="integrityHelp" type="button">Read capture guidance</button>
+            </aside>
+          </div>
+
+          <section class="panel workflow-panel">
+            <div class="panel-heading"><div><p class="eyebrow">HOW IT WORKS</p><h2>One focused review loop</h2></div><span class="state-chip ready">Ready when you are</span></div>
+            <div class="workflow-steps">
+              <div><span>1</span><h3>Grant permission</h3><p>Select a screen or camera in the browser's own consent dialog.</p></div>
+              <div><span>2</span><h3>Capture responsibly</h3><p>Question changes are compared locally before a record is created.</p></div>
+              <div><span>3</span><h3>Verify independently</h3><p>Save evidence, notes, and external sources before marking anything verified.</p></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="view-capture" data-view="capture">
+          <div class="page-heading capture-heading">
+            <div>
+              <p class="eyebrow">LIVE CAPTURE</p>
+              <h1>Review an authorized question source.</h1>
+              <p class="lede" id="captureSessionLabel">Create an audit session to begin.</p>
+            </div>
+            <div class="capture-stage-chip" id="captureStageChip"><span></span><b>Ready</b><small>no source active</small></div>
+          </div>
+
+          <div class="alert-banner info" id="captureNotice">
+            <span>⌁</span>
+            <p>QuizLens captures only after you grant browser permission. It cannot access screens or cameras silently, and it never submits answers anywhere.</p>
+          </div>
+
+          <div class="capture-grid">
+            <section class="panel capture-panel">
+              <div class="panel-heading capture-panel-heading">
+                <div><p class="eyebrow">CAPTURE SOURCE</p><h2>Preview</h2></div>
+                <span id="capturePermission" class="permission-label">Permission required</span>
+              </div>
+
+              <div class="source-tabs" role="tablist" aria-label="Capture source">
+                <button class="source-tab active" data-source="screen" type="button" role="tab" aria-selected="true">▣ Screen</button>
+                <button class="source-tab" data-source="camera" type="button" role="tab" aria-selected="false">◉ Camera</button>
+                <button class="source-tab" data-source="upload" type="button" role="tab" aria-selected="false">↥ Upload</button>
+              </div>
+
+              <div class="preview-frame" id="previewFrame">
+                <video id="captureVideo" autoplay muted playsinline></video>
+                <img id="captureImage" alt="Uploaded question preview" hidden />
+                <canvas id="captureCanvas" hidden></canvas>
+                <div class="preview-placeholder" id="previewPlaceholder">
+                  <span class="preview-glyph">▣</span>
+                  <h3>Choose an authorized source</h3>
+                  <p>Your preview appears here after the browser grants access.</p>
+                </div>
+                <div class="preview-overlay" id="previewOverlay" hidden><span></span> Capturing with your permission</div>
+              </div>
+
+              <input id="imageUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+              <div class="capture-controls">
+                <div class="capture-settings"><div class="field compact-field"><label for="captureInterval">Detection interval</label><select id="captureInterval"><option value="3000">3 seconds</option><option value="5000">5 seconds</option><option value="8000">8 seconds</option><option value="12000">12 seconds</option></select></div><div class="field compact-field"><label for="captureCrop">Question region</label><select id="captureCrop"><option value="full">Full source</option><option value="center">Center region</option></select></div></div>
+                <div class="control-row">
+                  <button id="startCaptureButton" class="button primary" type="button">Start auto capture</button>
+                  <button id="pauseCaptureButton" class="button secondary" type="button" disabled>Pause</button>
+                  <button id="manualCaptureButton" class="button ghost" type="button" disabled>Capture now</button>
+                  <button id="stopCaptureButton" class="icon-button danger" type="button" disabled aria-label="Stop capture">■</button>
+                </div>
+              </div>
+
+              <div class="detection-strip" aria-label="Capture status">
+                <span class="pulse-dot" id="detectionDot"></span>
+                <span id="detectionStatus">Waiting for a source</span>
+                <small id="duplicateStatus">Duplicate protection active after capture starts</small>
+              </div>
+            </section>
+
+            <section class="panel question-panel">
+              <div class="panel-heading question-panel-heading">
+                <div>
+                  <p class="eyebrow">CURRENT QUESTION</p>
+                  <h2 id="questionTitle">Nothing captured yet</h2>
+                </div>
+                <button class="icon-button" id="toggleQuestionRail" type="button" aria-label="Toggle saved questions">☷</button>
+              </div>
+
+              <div id="emptyQuestion" class="empty-state analysis-empty">
+                <span class="empty-icon">✦</span>
+                <h3>Your next capture will appear here</h3>
+                <p>Use an authorized source or upload a screenshot. The image is saved locally before any optional analysis.</p>
+              </div>
+
+              <div id="questionWorkspace" hidden>
+                <div class="question-meta" id="questionMeta"></div>
+                <div class="field"><label for="questionText">Question text <span class="optional">(review or paste OCR result)</span></label><textarea id="questionText" rows="4" placeholder="Question text is kept editable so you can correct transcription errors."></textarea></div>
+                <div class="option-section"><div class="section-inline-heading"><label>Answer options</label><button class="text-button" id="addOptionButton" type="button">Add option</button></div><div id="optionsList" class="options-list"></div></div>
+                <div class="analysis-card" id="analysisCard">
+                  <div class="analysis-card-top"><div><p class="eyebrow">AI ANALYSIS</p><h3 id="analysisTitle">Awaiting secure analysis</h3></div><span id="analysisBadge" class="state-chip muted">Not configured</span></div>
+                  <p id="analysisBody">A server-side OpenAI connection has not been configured for this deployment. Your capture is still saved privately in this browser and can be verified through independent sources.</p>
+                  <details id="analysisDetails"><summary>Why no suggestion is shown</summary><p>AI credentials must stay on a secure server. This public client never asks for or stores an API key in your browser.</p></details>
+                </div>
+                <div class="analysis-actions">
+                  <button class="button secondary" id="analyzeButton" type="button">Analyze securely</button>
+                  <button class="button ghost" id="googleSearchButton" type="button">Search Google</button>
+                  <button class="button ghost" id="copyQuestionButton" type="button">Copy</button>
+                  <button class="button ghost warning" id="flagQuestionButton" type="button">⚑ Flag</button>
+                </div>
+                <div class="save-row"><div id="saveHint"><span class="status-dot local"></span> Saved locally as you work</div><button class="button primary" id="saveNextButton" type="button">Save &amp; next</button></div>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel question-rail" id="questionRail" hidden>
+            <div class="panel-heading"><div><p class="eyebrow">SESSION RECORDS</p><h2>Captured in this session</h2></div><div class="rail-nav"><button class="icon-button" id="previousQuestionButton" type="button" aria-label="Previous question">‹</button><button class="icon-button" id="nextQuestionButton" type="button" aria-label="Next question">›</button></div></div>
+            <div class="rail-list" id="questionRailList"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-history" data-view="history">
+          <div class="page-heading">
+            <div><p class="eyebrow">QUESTION HISTORY</p><h1>Every capture, kept in context.</h1><p class="lede">Search, correct transcription, attach sources, and return to any saved question.</p></div>
+            <button class="button primary" id="historyNewAudit" type="button">Start new audit</button>
+          </div>
+          <section class="panel history-panel">
+            <div class="history-toolbar">
+              <label class="search-field"><span>⌕</span><input id="historySearch" type="search" placeholder="Search question text or notes" /></label>
+              <select id="historySessionFilter"><option value="all">All sessions</option></select>
+              <select id="historyStatusFilter"><option value="all">All statuses</option><option value="flagged">Flagged</option><option value="verified">Verified</option><option value="needs_verification">Needs verification</option><option value="duplicate">Possible duplicates</option></select>
+              <button class="button ghost" id="clearFiltersButton" type="button">Clear filters</button>
+            </div>
+            <div id="historyList" class="history-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-flagged" data-view="flagged">
+          <div class="page-heading"><div><p class="eyebrow">AUDIT FLAGS</p><h1>Resolve uncertainty deliberately.</h1><p class="lede">Flags are review prompts—not automatic proof that a question or answer key is wrong.</p></div><button class="button secondary" data-view-target="history" type="button">Browse history</button></div>
+          <section class="panel"><div id="flaggedList" class="history-list"></div></section>
+        </section>
+
+        <section class="view" id="view-reports" data-view="reports">
+          <div class="page-heading"><div><p class="eyebrow">REPORTS</p><h1>Export a defensible audit record.</h1><p class="lede">Exports include your captured text, options, audit remarks, and verification status. AI output remains labeled as a suggestion.</p></div></div>
+          <div class="report-grid">
+            <section class="panel report-builder"><div class="panel-heading"><div><p class="eyebrow">SESSION SUMMARY</p><h2 id="reportSessionName">All saved questions</h2></div><select id="reportSessionSelect"><option value="all">All sessions</option></select></div><div id="reportSummary" class="report-summary"></div><div class="report-options"><label class="check-control"><input id="includeScreenshots" type="checkbox" disabled /><span>Include captured images in PDF</span><small>Available with a connected private storage service</small></label><label class="check-control"><input id="includeNotes" type="checkbox" checked /><span>Include audit notes and sources</span></label></div><div class="export-row"><button class="button secondary" id="exportCsvButton" type="button">Export CSV</button><button class="button secondary" id="exportJsonButton" type="button">Export JSON</button><button class="button primary" id="exportPdfButton" type="button">Print / Save PDF</button></div></section>
+            <aside class="panel report-note"><span class="note-icon">⌁</span><h2>Designed for review</h2><p>Use this report as an audit aid. A separate source or authorized answer key is still required to verify a result.</p><ul><li>Questions stay grouped by session</li><li>Flagged records are called out</li><li>Verification decisions are explicit</li></ul></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-settings" data-view="settings">
+          <div class="page-heading"><div><p class="eyebrow">SETTINGS</p><h1>Connections &amp; workspace safeguards.</h1><p class="lede">This version keeps browser-local data on this device until you add an authenticated backend.</p></div></div>
+          <div class="settings-grid">
+            <section class="panel settings-card"><div class="settings-icon cyan">◌</div><div><h2>Local workspace</h2><p>Sessions and captures persist in this browser through IndexedDB. They are not synced to a server.</p><span class="state-chip ready">Active</span></div></section>
+            <section class="panel settings-card"><div class="settings-icon amber">✦</div><div><h2>AI service</h2><p id="aiConfigText">No secure server-side OpenAI endpoint is configured. Analysis is disabled by design.</p><span class="state-chip muted">Needs configuration</span></div></section>
+            <section class="panel settings-card"><div class="settings-icon blue">⌁</div><div><h2>Cloud archive</h2><p>Supabase authentication, storage, and row-level access are not connected to this static deployment.</p><span class="state-chip muted">Needs configuration</span></div></section>
+          </div>
+          <section class="panel data-controls"><div><p class="eyebrow">LOCAL DATA</p><h2>Manage this browser's records</h2><p>Export before clearing data. Clear is irreversible for records held only in this browser.</p></div><div class="data-buttons"><button class="button secondary" id="settingsExportButton" type="button">Export JSON backup</button><button class="button danger-button" id="clearDataButton" type="button">Clear local workspace</button></div></section>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="sessionDialog" class="modal">
+      <form method="dialog" id="sessionForm">
+        <div class="modal-heading"><div><p class="eyebrow">NEW AUDIT SESSION</p><h2>Set a clear review context.</h2></div><button class="icon-button" value="cancel" aria-label="Close dialog" type="submit">×</button></div>
+        <p class="modal-copy">Use only for questions you are authorized to capture and review. Captures are stored locally in this browser for this version.</p>
+        <div class="field"><label for="sessionTitle">Session name</label><input id="sessionTitle" maxlength="90" required placeholder="e.g. Marketing revision — week 4" /></div>
+        <div class="field"><label for="sessionDescription">Purpose <span class="optional">(optional)</span></label><textarea id="sessionDescription" rows="3" maxlength="300" placeholder="What are you reviewing or auditing?"></textarea></div>
+        <label class="consent-control"><input id="authorizedCheck" type="checkbox" required /><span>I confirm I am authorized to capture and review this source. I will not use QuizLens to bypass exam, proctoring, or platform safeguards.</span></label>
+        <div class="modal-actions"><button class="button ghost" type="submit" value="cancel">Cancel</button><button class="button primary" id="createSessionButton" value="default" type="submit">Create secure session</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="helpDialog" class="modal help-modal">
+      <form method="dialog"><div class="modal-heading"><div><p class="eyebrow">CAPTURE GUIDANCE</p><h2>Use QuizLens responsibly.</h2></div><button class="icon-button" value="close" aria-label="Close dialog" type="submit">×</button></div><div class="guide-list"><article><span>1</span><div><h3>Start with consent</h3><p>Screen and camera access use the browser's visible permission flow and stop when you end sharing.</p></div></article><article><span>2</span><div><h3>Capture only new questions</h3><p>QuizLens compares low-resolution frame fingerprints locally and waits for a stable change before saving.</p></div></article><article><span>3</span><div><h3>Treat answers as claims</h3><p>Only mark an answer verified after checking an independent, appropriate source. A Google search opens separately and does not change status.</p></div></article></div><div class="modal-actions"><button class="button primary" type="submit" value="close">Understood</button></div></form>
+    </dialog>
+
+    <dialog id="confirmDialog" class="modal confirm-modal"><form method="dialog"><div class="modal-heading"><div><p class="eyebrow">CONFIRM ACTION</p><h2 id="confirmTitle">Are you sure?</h2></div></div><p class="modal-copy" id="confirmMessage"></p><div class="modal-actions"><button class="button ghost" type="submit" value="cancel">Cancel</button><button class="button danger-button" id="confirmActionButton" value="confirm" type="submit">Clear data</button></div></form></dialog>
+
+    <template id="optionTemplate"><div class="option-edit"><span class="option-label"></span><input class="option-input" type="text" maxlength="500" placeholder="Option text" /><button class="remove-option" type="button" aria-label="Remove option">×</button></div></template>
+    <script src="./app.js"></script>
+  </body>
+</html>
