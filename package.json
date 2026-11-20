@@ -1,0 +1,10 @@
+{
+  "name": "quizlens-ai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Privacy-first browser workspace for authorized question auditing.",
+  "scripts": {
+    "test": "node tests/api-analyze.test.cjs",
+    "check": "node --check dist/app.js && node --check api/analyze.js"
+  }
+}
